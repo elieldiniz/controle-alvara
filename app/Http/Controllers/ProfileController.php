@@ -22,6 +22,16 @@ class ProfileController extends Controller
     }
 
     /**
+     * Display the user's API tokens.
+     */
+    public function tokens(Request $request): View
+    {
+        return view('profile.tokens', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse

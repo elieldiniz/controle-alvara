@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     // API Tokens Management
+    Route::get('/profile/tokens', [ProfileController::class, 'tokens'])->name('profile.tokens');
     Route::post('/profile/tokens', [ProfileController::class, 'storeToken'])->name('profile.tokens.store');
     Route::delete('/profile/tokens/{tokenId}', [ProfileController::class, 'destroyToken'])->name('profile.tokens.destroy');
 });
