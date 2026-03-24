@@ -1,7 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Empresas</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Empresas
+                @if($tipo_slug)
+                    <span class="text-sm text-gray-500 ml-2">— {{ \App\Models\TipoAlvara::where('slug', $tipo_slug)->first()?->nome ?? $tipo_slug }}</span>
+                @endif
+            </h2>
             <a href="{{ route('empresas.create') }}" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-semibold text-sm transition shadow-sm">
                 + Nova Empresa
             </a>

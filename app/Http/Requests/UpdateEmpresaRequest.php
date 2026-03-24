@@ -16,6 +16,8 @@ class UpdateEmpresaRequest extends FormRequest
             'responsavel' => ['required', 'string', 'max:255'],
             'telefone' => ['required', 'string', 'max:20'],
             'email' => ['required', 'email', 'max:255'],
+            'tipos_alvara' => ['nullable', 'array'],
+            'tipos_alvara.*' => ['exists:tipo_alvaras,id'],
         ];
     }
 }

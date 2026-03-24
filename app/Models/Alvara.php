@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasOwner;
+
 class Alvara extends Model
 {
-    use HasFactory;
+    use HasFactory, HasOwner;
     protected $fillable = [
         'empresa_id',
         'user_id',
+        'owner_id',
+        'tipo_alvara_id',
         'tipo',
         'numero',
         'data_emissao',
@@ -47,5 +51,25 @@ class Alvara extends Model
     public function notificacoes()
     {
         return $this->hasMany(Notificacao::class);
+    }
+
+    public function tipoAlvara()
+    {
+        return $this->belongsTo(TipoAlvara::class, 'tipo_alvara_id');
+    }
+
+    public function scopeVigente($query)
+    {
+        return $query->where('status', 'vigente');
+    }
+
+    public function scopeEmRenovacao($query)
+    {
+        return $query->where('status', 'proximo');
+    }
+
+    public function scopeVencido($query)
+    {
+        return $query->where('status', 'vencido');
     }
 }

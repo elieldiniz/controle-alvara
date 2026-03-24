@@ -6,7 +6,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
                 <div>
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $alvara->tipo }}</h2>
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $alvara->tipoAlvara?->nome ?? $alvara->tipo }}</h2>
                     <p class="text-sm text-gray-500">{{ $alvara->empresa->nome }}</p>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-                    <div><span class="font-semibold text-gray-500 block mb-1">Tipo</span>{{ $alvara->tipo }}</div>
+                    <div><span class="font-semibold text-gray-500 block mb-1">Tipo</span>{{ $alvara->tipoAlvara?->nome ?? $alvara->tipo }}</div>
                     <div><span class="font-semibold text-gray-500 block mb-1">Número</span>{{ $alvara->numero ?? '—' }}</div>
                     <div><span class="font-semibold text-gray-500 block mb-1">Emissão</span>{{ $alvara->data_emissao?->format('d/m/Y') ?? '—' }}</div>
                     <div><span class="font-semibold text-gray-500 block mb-1">Empresa</span>{{ $alvara->empresa->nome }}</div>

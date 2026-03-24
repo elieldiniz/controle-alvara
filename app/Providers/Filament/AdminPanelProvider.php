@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            // ->login() // Desativado para centralizar no login do Blade
             ->colors([
                 'primary' => Color::Amber,
             ])

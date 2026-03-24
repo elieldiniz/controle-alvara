@@ -1,7 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Alvarás</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Alvarás
+                @if($tipo_slug)
+                    <span class="text-sm text-gray-500 ml-2">— {{ \App\Models\TipoAlvara::where('slug', $tipo_slug)->first()?->nome ?? $tipo_slug }}</span>
+                @endif
+            </h2>
             <a href="{{ route('alvaras.create') }}" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md font-semibold text-sm transition shadow-sm">
                 + Novo Alvará
             </a>
@@ -27,6 +32,15 @@
                         <option value="">Todas as Empresas</option>
                         @foreach($empresas as $emp)
                         <option value="{{ $emp->id }}" @selected($empresa_id == $emp->id)>{{ $emp->nome }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Tipo de Alvará</label>
+                    <select name="tipo" class="w-full border-gray-300 rounded-md shadow-sm text-sm">
+                        <option value="">Todos os Tipos</option>
+                        @foreach($tiposAlvara as $tipo)
+                            <option value="{{ $tipo->slug }}" @selected($tipo_slug == $tipo->slug)>{{ $tipo->nome }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -65,7 +79,7 @@
                             @php $diff = now()->diffInDays($alvara->data_vencimento, false); @endphp
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
-                                    <div class="font-bold text-gray-800">{{ $alvara->tipo }}</div>
+                                    <div class="font-bold text-gray-800">{{ $alvara->tipoAlvara?->nome ?? $alvara->tipo }}</div>
                                     <div class="text-xs text-gray-500">{{ $alvara->numero ?? '—' }}</div>
                                 </td>
                                 <td class="px-6 py-4 text-gray-600 text-sm">{{ $alvara->empresa->nome }}</td>

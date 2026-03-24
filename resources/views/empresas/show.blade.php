@@ -28,6 +28,14 @@
                     <div><span class="font-semibold text-gray-500 block mb-1">Responsável</span>{{ $empresa->responsavel }}</div>
                     <div><span class="font-semibold text-gray-500 block mb-1">Telefone</span>{{ $empresa->telefone }}</div>
                     <div><span class="font-semibold text-gray-500 block mb-1">E-mail</span>{{ $empresa->email }}</div>
+                    <div class="md:col-span-3 mt-4 pt-4 border-t border-gray-100">
+                        <span class="font-semibold text-gray-500 block mb-2">Tipos de Alvará Possuídos / Exigidos</span>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($empresa->tiposAlvara as $tipo)
+                                <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold border border-blue-100 italic">{{ $tipo->nome }}</span>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -49,7 +57,7 @@
                     <tbody class="divide-y divide-gray-200">
                         @forelse($empresa->alvaras as $alvara)
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 font-semibold text-gray-800">{{ $alvara->tipo }}</td>
+                            <td class="px-6 py-4 font-semibold text-gray-800">{{ $alvara->tipoAlvara->nome ?? $alvara->tipo }}</td>
                             <td class="px-6 py-4 text-gray-600 font-mono text-xs">{{ $alvara->numero ?? '—' }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $alvara->data_vencimento->format('d/m/Y') }}</td>
                             <td class="px-6 py-4">

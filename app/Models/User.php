@@ -7,9 +7,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use Spatie\Permission\Traits\HasRoles;
+
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
+class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole('super-admin');
+    }
 
     protected $fillable = [
         'name',
@@ -18,6 +28,9 @@ class User extends Authenticatable
         'google_id',
         'google_token',
         'google_refresh_token',
+        'plan_id',
+        'parent_id',
+        'owner_id',
     ];
 
     protected $hidden = [
@@ -53,5 +66,20 @@ class User extends Authenticatable
     public function notificacoes()
     {
         return $this->hasMany(Notificacao::class);
+    }
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
+    public function members()
+    {
+        return $this->hasMany(User::class, 'parent_id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'parent_id');
     }
 }

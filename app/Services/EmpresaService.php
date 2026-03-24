@@ -9,12 +9,19 @@ class EmpresaService
 {
     public function criar(EmpresaDTO $dto): Empresa
     {
-        return Empresa::create($dto->toArray());
+        $empresa = Empresa::create($dto->toArray());
+        
+        if (!empty($dto->tipos_alvara)) {
+            $empresa->tiposAlvara()->sync($dto->tipos_alvara);
+        }
+        
+        return $empresa;
     }
 
     public function atualizar(Empresa $empresa, EmpresaDTO $dto): Empresa
     {
         $empresa->update($dto->toArray());
+        $empresa->tiposAlvara()->sync($dto->tipos_alvara);
         return $empresa;
     }
 

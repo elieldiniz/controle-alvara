@@ -19,24 +19,31 @@ class AlvaraController extends Controller
     {
         $status = $request->get('status');
         $empresa_id = $request->get('empresa_id');
+        $tipo_slug = $request->get('tipo');
 
-        $alvaras = Alvara::with('empresa')
-            ->where('user_id', $request->user()->id)
+        $alvaras = Alvara::with(['empresa', 'tipoAlvara'])
             ->when($status, fn ($q) => $q->where('status', $status))
             ->when($empresa_id, fn ($q) => $q->where('empresa_id', $empresa_id))
+            ->when($tipo_slug, function ($q) use ($tipo_slug) {
+                $q->whereHas('tipoAlvara', fn ($query) => $query->where('slug', $tipo_slug));
+            })
             ->latest()
             ->paginate(15);
 
-        $empresas = Empresa::where('user_id', $request->user()->id)->get();
+        $empresas = Empresa::all();
+        $tiposAlvara = \App\Models\TipoAlvara::all();
 
-        return view('alvaras.index', compact('alvaras', 'empresas', 'status', 'empresa_id'));
+        return view('alvaras.index', compact('alvaras', 'empresas', 'tiposAlvara', 'status', 'empresa_id', 'tipo_slug'));
     }
 
     public function create(Request $request)
     {
-        $empresas = Empresa::where('user_id', $request->user()->id)->get();
+        $empresas = Empresa::all();
+        $tiposAlvara = \App\Models\TipoAlvara::all();
         $empresaSelecionada = $request->get('empresa_id');
-        return view('alvaras.create', compact('empresas', 'empresaSelecionada'));
+        $tipoSelecionado = $request->get('tipo'); // Slug do tipo se vier do sidebar
+        
+        return view('alvaras.create', compact('empresas', 'tiposAlvara', 'empresaSelecionada', 'tipoSelecionado'));
     }
 
     public function store(StoreAlvaraRequest $request, CriarAlvaraAction $action)
@@ -69,8 +76,9 @@ class AlvaraController extends Controller
 
     public function edit(Alvara $alvara, Request $request)
     {
-        $empresas = Empresa::where('user_id', $request->user()->id)->get();
-        return view('alvaras.edit', compact('alvara', 'empresas'));
+        $empresas = Empresa::all();
+        $tiposAlvara = \App\Models\TipoAlvara::all();
+        return view('alvaras.edit', compact('alvara', 'empresas', 'tiposAlvara'));
     }
 
     public function update(UpdateAlvaraRequest $request, Alvara $alvara, AtualizarAlvaraAction $action)

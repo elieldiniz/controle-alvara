@@ -57,4 +57,28 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Create a new API token for the user.
+     */
+    public function storeToken(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'token_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $token = $request->user()->createToken($request->token_name);
+
+        return Redirect::route('profile.edit')->with('status', 'token-created')->with('plainTextToken', $token->plainTextToken);
+    }
+
+    /**
+     * Delete an API token.
+     */
+    public function destroyToken(Request $request, $tokenId): RedirectResponse
+    {
+        $request->user()->tokens()->where('id', $tokenId)->delete();
+
+        return Redirect::route('profile.edit')->with('status', 'token-deleted');
+    }
 }

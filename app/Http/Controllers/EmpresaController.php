@@ -14,17 +14,24 @@ class EmpresaController extends Controller
 {
     public function index(Request $request)
     {
-        $empresas = Empresa::withCount('alvaras')
-            ->where('user_id', $request->user()->id)
-            ->latest()
-            ->paginate(10);
+        $tipo_slug = $request->get('tipo');
+        $query = Empresa::withCount('alvaras');
 
-        return view('empresas.index', compact('empresas'));
+        if ($tipo_slug) {
+            $query->whereHas('tiposAlvara', function($q) use ($tipo_slug) {
+                $q->where('slug', $tipo_slug);
+            });
+        }
+
+        $empresas = $query->latest()->paginate(10);
+
+        return view('empresas.index', compact('empresas', 'tipo_slug'));
     }
 
     public function create()
     {
-        return view('empresas.create');
+        $tiposAlvara = \App\Models\TipoAlvara::all();
+        return view('empresas.create', compact('tiposAlvara'));
     }
 
     public function store(StoreEmpresaRequest $request, CriarEmpresaAction $action)
@@ -41,7 +48,9 @@ class EmpresaController extends Controller
 
     public function edit(Empresa $empresa)
     {
-        return view('empresas.edit', compact('empresa'));
+        $tiposAlvara = \App\Models\TipoAlvara::all();
+        $empresa->load('tiposAlvara');
+        return view('empresas.edit', compact('empresa', 'tiposAlvara'));
     }
 
     public function update(UpdateEmpresaRequest $request, Empresa $empresa, AtualizarEmpresaAction $action)

@@ -27,8 +27,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de Alvará <span class="text-red-500">*</span></label>
-                            <input type="text" name="tipo" value="{{ old('tipo', $alvara->tipo) }}" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 @error('tipo') border-red-500 @enderror">
-                            @error('tipo') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            <select name="tipo_alvara_id" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 @error('tipo_alvara_id') border-red-500 @enderror">
+                                @foreach($tiposAlvara as $tipo)
+                                    <option value="{{ $tipo->id }}" @selected(old('tipo_alvara_id', $alvara->tipo_alvara_id) == $tipo->id)>
+                                        {{ $tipo->nome }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('tipo_alvara_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">Número / Protocolo</label>

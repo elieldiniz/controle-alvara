@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\HasOwner;
+
 class Empresa extends Model
 {
-    use HasFactory;
+    use HasFactory, HasOwner;
     protected $fillable = [
         'user_id',
+        'owner_id',
         'nome',
         'cnpj',
         'responsavel',
@@ -25,5 +28,10 @@ class Empresa extends Model
     public function alvaras()
     {
         return $this->hasMany(Alvara::class);
+    }
+
+    public function tiposAlvara()
+    {
+        return $this->belongsToMany(TipoAlvara::class, 'empresa_tipo_alvara');
     }
 }
